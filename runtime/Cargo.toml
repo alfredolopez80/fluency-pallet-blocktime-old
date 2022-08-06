@@ -4,7 +4,7 @@ description = 'FRAME pallet blocktime, for task of Fluency Recruitment process.'
 edition = '2018'
 homepage = 'https://substrate.dev'
 license = 'Unlicense'
-name = 'pallet-blocktime'
+name = 'node-template-runtime'
 repository = 'https://github.com/alfredolopez80/fluency-pallet-blocktime.git'
 version = '2.0.1'
 
