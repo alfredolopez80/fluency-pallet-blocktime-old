@@ -277,10 +277,10 @@ impl pallet_sudo::Trait for Runtime {
 impl pallet_blocktime::Trait for Runtime {
   type Event = Event;
   type TimeProvider = pallet_timestamp::Pallet<Runtime>;
-  type Moment = u64;
-  type OnTimestampSet = ();
+  type Moment = Moment;
+  type OnTimestampSet = Babe;
   type MinimumPeriod = MinimumPeriod;
-  type WeightInfo = ();
+  type WeightInfo = weights::pallet_timestamp::WeightInfo;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
