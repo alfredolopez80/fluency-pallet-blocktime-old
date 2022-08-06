@@ -42,7 +42,7 @@ pub use frame_support::{
   construct_runtime,
   parameter_types,
   StorageValue,
-  traits::{ KeyOwnerProofSystem, Randomness },
+  traits::{ KeyOwnerProofSystem, Randomness, UnixTime },
   weights::{
     Weight,
     IdentityFee,
@@ -280,7 +280,7 @@ impl pallet_blocktime::Trait for Runtime {
   type Moment = Moment;
   type OnTimestampSet = Babe;
   type MinimumPeriod = MinimumPeriod;
-  type WeightInfo = weights::pallet_timestamp::WeightInfo;
+  type WeightInfo = weights::Weight;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
