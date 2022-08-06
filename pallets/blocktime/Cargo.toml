@@ -33,5 +33,4 @@ std = [
     'codec/std',
     'frame-support/std',
     'frame-system/std',
-    'pallet-timestamp/std',
 ]
