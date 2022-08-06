@@ -28,7 +28,6 @@ frame-support = { version = "2.0.0", default-features = false }
 frame-system = { version = "2.0.0", default-features = false }
 sp-inherents = { version = "2.0.0", default-features = false }
 sp-timestamp = { version = "2.0.0", default-features = false }
-impl-trait-for-tuples = { version = "0.1.3", default-features = false }
 pallet-timestamp = { default-features = false, version = '2.0.1' }
 
 [dev-dependencies]
@@ -45,6 +44,5 @@ std = [
     "serde",
     "frame-system/std",
     "sp-timestamp/std",
-    "impl-trait-for-tuples/std",
     "pallet-timestamp/std",
 ]

@@ -3784,9 +3784,11 @@ dependencies = [
  "parity-scale-codec",
  "serde",
  "sp-core",
+ "sp-inherents",
  "sp-io",
  "sp-runtime",
  "sp-std",
+ "sp-timestamp",
 ]
 
 [[package]]
