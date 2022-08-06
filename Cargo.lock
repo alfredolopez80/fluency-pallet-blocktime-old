@@ -3785,7 +3785,6 @@ dependencies = [
  "serde",
  "sp-core",
  "sp-inherents",
- "sp-io",
  "sp-runtime",
  "sp-std",
  "sp-timestamp",
