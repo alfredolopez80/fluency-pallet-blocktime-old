@@ -2,15 +2,15 @@
 
 use frame_support::{decl_module, decl_storage, traits::Get};
 
-use std::{result, cmp};
-use inherents::{ProvideInherent, InherentData, InherentIdentifier};
+use sp_std::{result, cmp};
+use sp_inherents::{ProvideInherent, InherentData, InherentIdentifier};
 
 use frame_support::{
 	Parameter,
 	traits::{Time, UnixTime, IsType},
 	weights::{DispatchClass, Weight},
 };
-use runtime::{
+use sp_runtime::{
 	RuntimeString,
 	traits::{
 		AtLeast32Bit, Zero, SaturatedConversion, Scale
