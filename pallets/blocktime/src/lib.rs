@@ -1,23 +1,14 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+use sp_inherents::{ProvideInherent, InherentData, InherentIdentifier};
+#[cfg(feature = "std")]
 use frame_support::{
-	decl_event, decl_error, decl_module, decl_storage, dispatch::DispatchResult,
-	ensure,
-	inherents::{
-		InherentData, InherentDataProviders,
-		ProvideInherentData,
-	},
-	traits::{Currency, Get, Time, UnixTime, IsType, OnUnbalanced, WithdrawReason, WithdrawReasons},
-	weights::{DispatchInfo, GetDispatchInfo, Pays, DispatchClass, Weight},
+	decl_module, decl_storage,
+	traits::{Get, Time, UnixTime, IsType},
+	weights::{ DispatchClass, Weight},
 	Parameter,
 };
-pub use pallet::*;
-use sp_runtime::{
-	RuntimeString,
-	traits::{
-		AtLeast32Bit, Zero, SaturatedConversion, Scale
-	}
-};
+use sp_runtime::*;
 use sp_std::prelude::*;
 use frame_system::ensure_none;
 use pallet_timestamp::{
