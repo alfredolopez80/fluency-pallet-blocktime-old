@@ -2,7 +2,6 @@
 
 use sp_std::{result, cmp};
 use sp_inherents::{ProvideInherent, InherentData, InherentIdentifier};
-#[cfg(feature = "std")]
 use frame_support::debug;
 use frame_support::{
 	decl_module, decl_storage,
