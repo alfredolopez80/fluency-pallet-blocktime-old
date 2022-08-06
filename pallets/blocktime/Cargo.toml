@@ -28,6 +28,7 @@ serde = { features = ['derive'], optional = true, version = '1.0.119' }
 sp-core = { default-features = false, version = '2.0.1' }
 sp-io = { default-features = false, version = '2.0.1' }
 sp-runtime = { default-features = false, version = '2.0.1' }
+pallet-timestamp = { default-features = false, version = '2.0.1' }
 
 [features]
 default = ['std']
@@ -36,4 +37,5 @@ std = [
     'serde',
     'frame-support/std',
     'frame-system/std',
+    'pallet-timestamp/std',
 ]
