@@ -264,7 +264,7 @@ impl pallet_sudo::Trait for Runtime {
 /// Configure the template pallet in pallets/template.
 impl pallet_blocktime::Trait for Runtime {
 	type Event = Event;
-	type TimeProvider = pallet_timestamp::Pallet<Runtime>;
+    type TimeProvider = pallet_timestamp::Pallet<Runtime>;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
