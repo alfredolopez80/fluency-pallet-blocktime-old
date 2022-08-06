@@ -12,7 +12,6 @@ use frame_support::{
 };
 use sp_runtime::{ RuntimeString, traits::{ AtLeast32Bit, Zero, SaturatedConversion, Scale } };
 use frame_system::ensure_none;
-use frame_system::Config;
 
 use sp_timestamp::{ InherentError, INHERENT_IDENTIFIER, InherentType, OnTimestampSet };
 
