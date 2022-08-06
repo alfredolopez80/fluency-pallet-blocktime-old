@@ -1,12 +1,12 @@
 [package]
-authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
 build = 'build.rs'
-description = 'A fresh FRAME-based Substrate node, ready for hacking.'
 edition = '2018'
 homepage = 'https://substrate.dev'
 license = 'Unlicense'
 name = 'node-template'
-repository = 'https://github.com/substrate-developer-hub/substrate-node-template/'
+authors = ['Alfredo Lopez <alfredolopez80@gmail.com>']
+description = 'FRAME pallet blocktime, for task of Fluency Recruitment process.'
+repository = 'https://github.com/alfredolopez80/fluency-pallet-blocktime.git'
 version = '2.0.1'
 
 [[bin]]
