@@ -1,52 +1,47 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use sp_std::{result, cmp};
-use sp_inherents::{ProvideInherent, InherentData, InherentIdentifier};
+use sp_std::{ result, cmp };
+use sp_inherents::{ ProvideInherent, InherentData, InherentIdentifier };
 use frame_support::debug;
 use frame_support::{
-	decl_module, decl_storage,
-	traits::{Get, Time, UnixTime},
-	weights::{ DispatchClass, Weight},
-	Parameter,
+  decl_module,
+  decl_storage,
+  traits::{ Get, Time, UnixTime },
+  weights::{ DispatchClass, Weight },
+  Parameter,
 };
-use sp_runtime::{
-	RuntimeString,
-	traits::{
-		AtLeast32Bit, Zero, SaturatedConversion, Scale
-	}
-};
+use sp_runtime::{ RuntimeString, traits::{ AtLeast32Bit, Zero, SaturatedConversion, Scale } };
 use frame_system::ensure_none;
 use frame_system::Event;
 
-use sp_timestamp::{
-	InherentError, INHERENT_IDENTIFIER, InherentType,
-	OnTimestampSet,
-};
+use sp_timestamp::{ InherentError, INHERENT_IDENTIFIER, InherentType, OnTimestampSet };
 
 pub trait WeightInfo {
-	fn set() -> Weight;
-	fn on_finalize() -> Weight;
+  fn set() -> Weight;
+  fn on_finalize() -> Weight;
 }
-
 /// The module configuration trait
 pub trait Trait: frame_system::Trait {
-	/// Type used for expressing timestamp.
-	type Moment: Parameter + Default + AtLeast32Bit
-		+ Scale<Self::BlockNumber, Output = Self::Moment> + Copy;
-	/// Something which can be notified when the timestamp is set. Set this to `()` if not needed.
-	type OnTimestampSet: OnTimestampSet<Self::Moment>;
+  /// Type used for expressing timestamp.
+  type Moment: Parameter +
+    Default +
+    AtLeast32Bit +
+    Scale<Self::BlockNumber, Output = Self::Moment> +
+    Copy;
+  /// Something which can be notified when the timestamp is set. Set this to `()` if not needed.
+  type OnTimestampSet: OnTimestampSet<Self::Moment>;
 
-	type Event: From<Event<Self>> + Into<<Self as frame_system::Trait>::Event>;
-	type TimeProvider: UnixTime;
+  type Event: From<Event<Self>> + Into<<Self as frame_system::Trait>::Event>;
+  type TimeProvider: UnixTime;
 
-	/// The minimum period between blocks. Beware that this is different to the *expected* period
-	/// that the block production apparatus provides. Your chosen consensus system will generally
-	/// work with this to determine a sensible block time. e.g. For Aura, it will be double this
-	/// period on default settings.
-	type MinimumPeriod: Get<Self::Moment>;
+  /// The minimum period between blocks. Beware that this is different to the *expected* period
+  /// that the block production apparatus provides. Your chosen consensus system will generally
+  /// work with this to determine a sensible block time. e.g. For Aura, it will be double this
+  /// period on default settings.
+  type MinimumPeriod: Get<Self::Moment>;
 
-	/// Weight information for extrinsics in this pallet.
-	type WeightInfo: WeightInfo;
+  /// Weight information for extrinsics in this pallet.
+  type WeightInfo: WeightInfo;
 }
 
 decl_module! {
@@ -117,86 +112,89 @@ decl_storage! {
 }
 
 impl<T: Trait> Module<T> {
-	/// Get the current time for the current block.
-	///
-	/// NOTE: if this function is called prior to setting the timestamp,
-	/// it will return the timestamp of the previous block.
-	pub fn get() -> T::Moment {
-		Self::now()
-	}
+  /// Get the current time for the current block.
+  ///
+  /// NOTE: if this function is called prior to setting the timestamp,
+  /// it will return the timestamp of the previous block.
+  pub fn get() -> T::Moment {
+    Self::now()
+  }
 
-	/// Set the timestamp to something in particular. Only used for tests.
-	#[cfg(feature = "std")]
-	pub fn set_timestamp(now: T::Moment) {
-		<Self as Store>::Now::put(now);
-	}
+  /// Set the timestamp to something in particular. Only used for tests.
+  #[cfg(feature = "std")]
+  pub fn set_timestamp(now: T::Moment) {
+    <Self as Store>::Now::put(now);
+  }
 }
 
 fn extract_inherent_data(data: &InherentData) -> Result<InherentType, RuntimeString> {
-	data.get_data::<InherentType>(&INHERENT_IDENTIFIER)
-		.map_err(|_| RuntimeString::from("Invalid timestamp inherent data encoding."))?
-		.ok_or_else(|| "Timestamp inherent data is not provided.".into())
+  data
+    .get_data::<InherentType>(&INHERENT_IDENTIFIER)
+    .map_err(|_| RuntimeString::from("Invalid timestamp inherent data encoding."))?
+    .ok_or_else(|| "Timestamp inherent data is not provided.".into())
 }
 
 impl<T: Trait> ProvideInherent for Module<T> {
-	type Call = Call<T>;
-	type Error = InherentError;
-	const INHERENT_IDENTIFIER: InherentIdentifier = INHERENT_IDENTIFIER;
+  type Call = Call<T>;
+  type Error = InherentError;
+  const INHERENT_IDENTIFIER: InherentIdentifier = INHERENT_IDENTIFIER;
 
-	fn create_inherent(data: &InherentData) -> Option<Self::Call> {
-		let data: T::Moment = extract_inherent_data(data)
-			.expect("Gets and decodes timestamp inherent data")
-			.saturated_into();
+  fn create_inherent(data: &InherentData) -> Option<Self::Call> {
+    let data: T::Moment = extract_inherent_data(data)
+      .expect("Gets and decodes timestamp inherent data")
+      .saturated_into();
 
-		let next_time = cmp::max(data, Self::now() + T::MinimumPeriod::get());
-		Some(Call::set(next_time.into()))
-	}
+    let next_time = cmp::max(data, Self::now() + T::MinimumPeriod::get());
+    Some(Call::set(next_time.into()))
+  }
 
-	fn check_inherent(call: &Self::Call, data: &InherentData) -> result::Result<(), Self::Error> {
-		const MAX_TIMESTAMP_DRIFT_MILLIS: u64 = 30 * 1000;
+  fn check_inherent(call: &Self::Call, data: &InherentData) -> result::Result<(), Self::Error> {
+    const MAX_TIMESTAMP_DRIFT_MILLIS: u64 = 30 * 1000;
 
-		let t: u64 = match call {
-			Call::set(ref t) => t.clone().saturated_into::<u64>(),
-			_ => return Ok(()),
-		};
+    let t: u64 = match call {
+      Call::set(ref t) => t.clone().saturated_into::<u64>(),
+      _ => {
+        return Ok(());
+      }
+    };
 
-		let data = extract_inherent_data(data).map_err(|e| InherentError::Other(e))?;
+    let data = extract_inherent_data(data).map_err(|e| InherentError::Other(e))?;
 
-		let minimum = (Self::now() + T::MinimumPeriod::get()).saturated_into::<u64>();
-		if t > data + MAX_TIMESTAMP_DRIFT_MILLIS {
-			Err(InherentError::Other("Timestamp too far in future to accept".into()))
-		} else if t < minimum {
-			Err(InherentError::ValidAtTimestamp(minimum))
-		} else {
-			Ok(())
-		}
-	}
+    let minimum = (Self::now() + T::MinimumPeriod::get()).saturated_into::<u64>();
+    if t > data + MAX_TIMESTAMP_DRIFT_MILLIS {
+      Err(InherentError::Other("Timestamp too far in future to accept".into()))
+    } else if t < minimum {
+      Err(InherentError::ValidAtTimestamp(minimum))
+    } else {
+      Ok(())
+    }
+  }
 }
 
 impl<T: Trait> Time for Module<T> {
-	type Moment = T::Moment;
+  type Moment = T::Moment;
 
-	/// Before the first set of now with inherent the value returned is zero.
-	fn now() -> Self::Moment {
-		Self::now()
-	}
+  /// Before the first set of now with inherent the value returned is zero.
+  fn now() -> Self::Moment {
+    Self::now()
+  }
 }
 
 /// Before the timestamp inherent is applied, it returns the time of previous block.
 ///
 /// On genesis the time returned is not valid.
 impl<T: Trait> UnixTime for Module<T> {
-	fn now() -> core::time::Duration {
-		// now is duration since unix epoch in millisecond as documented in
-		// `sp_timestamp::InherentDataProvider`.
-		let now = Self::now();
-		sp_std::if_std! {
-			if now == T::Moment::zero() {
-				debug::error!(
-					"`pallet_timestamp::UnixTime::now` is called at genesis, invalid value returned: 0"
-				);
-			}
-		}
-		core::time::Duration::from_millis(now.saturated_into::<u64>())
-	}
+  fn now() -> core::time::Duration {
+    // now is duration since unix epoch in millisecond as documented in
+    // `sp_timestamp::InherentDataProvider`.
+    let now = Self::now();
+    sp_std::if_std! {
+      if now == T::Moment::zero() {
+        debug::error!(
+          "`pallet_timestamp::UnixTime::now` is called at genesis, invalid value returned: 0"
+        );
+      }
+    }
+    core::time::Duration::from_millis(now.saturated_into::<u64>())
+  }
 }
