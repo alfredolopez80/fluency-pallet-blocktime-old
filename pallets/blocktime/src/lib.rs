@@ -6,7 +6,7 @@ use sp_inherents::{ProvideInherent, InherentData, InherentIdentifier};
 use frame_support::debug;
 use frame_support::{
 	decl_module, decl_storage,
-	traits::{Get, Time, UnixTime, IsType},
+	traits::{Get, Time, UnixTime},
 	weights::{ DispatchClass, Weight},
 	Parameter,
 };
@@ -35,8 +35,8 @@ pub trait Trait: frame_system::Trait {
 	/// Something which can be notified when the timestamp is set. Set this to `()` if not needed.
 	type OnTimestampSet: OnTimestampSet<Self::Moment>;
 
-	type Event: From<Event<Self>> + Into<<Self as frame_system::Trait>::Event>;
-    type TimeProvider: UnixTime;
+	type Event = Event;
+	type TimeProvider: UnixTime;
 
 	/// The minimum period between blocks. Beware that this is different to the *expected* period
 	/// that the block production apparatus provides. Your chosen consensus system will generally
