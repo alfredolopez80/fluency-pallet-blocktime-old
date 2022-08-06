@@ -6,19 +6,21 @@ use frame_support::debug;
 use frame_support::{
   decl_module,
   decl_storage,
-  traits::{ Get, Time, UnixTime },
+  decl_event,
+  traits::{ Get, Time, UnixTime, PalletInfo, },
   weights::{ DispatchClass, Weight },
   Parameter,
 };
 use sp_runtime::{ RuntimeString, traits::{ AtLeast32Bit, Zero, SaturatedConversion, Scale } };
 use frame_system::ensure_none;
-
 use sp_timestamp::{ InherentError, INHERENT_IDENTIFIER, InherentType, OnTimestampSet };
+
 
 pub trait WeightInfo {
   fn set() -> Weight;
   fn on_finalize() -> Weight;
 }
+
 /// The module configuration trait
 pub trait Trait: frame_system::Trait {
   /// Type used for expressing timestamp.
@@ -109,6 +111,12 @@ decl_storage! {
 		DidUpdate: bool;
 	}
 }
+
+decl_event!(
+    pub enum Event {
+        EmitInput(u32),
+    }
+);
 
 impl<T: Trait> Module<T> {
   /// Get the current time for the current block.
