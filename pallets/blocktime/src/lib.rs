@@ -6,7 +6,7 @@ use sp_inherents::{ProvideInherent, InherentData, InherentIdentifier};
 use frame_support::debug;
 use frame_support::{
 	decl_module, decl_storage,
-	traits::{Get, Time, UnixTime, IsType},
+	traits::{Get, Time, UnixTime},
 	weights::{ DispatchClass, Weight},
 	Parameter,
 };
@@ -22,13 +22,10 @@ use sp_timestamp::{
 	OnTimestampSet,
 };
 
-use pallet_timestamp as timestamp;
-
 pub trait WeightInfo {
 	fn set() -> Weight;
 	fn on_finalize() -> Weight;
 }
-
 
 /// The module configuration trait
 pub trait Trait: frame_system::Trait {

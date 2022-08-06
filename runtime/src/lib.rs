@@ -39,7 +39,7 @@ pub use frame_support::{
 };
 
 /// Import the template pallet.
-pub use pallet_template;
+pub use pallet_blocktime;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -262,8 +262,9 @@ impl pallet_sudo::Trait for Runtime {
 }
 
 /// Configure the template pallet in pallets/template.
-impl pallet_template::Trait for Runtime {
+impl pallet_blocktime::Trait for Runtime {
 	type Event = Event;
+	type TimeProvider = pallet_timestamp::Pallet<Runtime>;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
