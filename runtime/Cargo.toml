@@ -80,6 +80,7 @@ std = [
     'pallet-randomness-collective-flip/std',
     'pallet-sudo/std',
     'pallet-timestamp/std',
+    'pallet-blocktime/std',
     'pallet-transaction-payment/std',
     'pallet-transaction-payment-rpc-runtime-api/std',
     'sp-api/std',
