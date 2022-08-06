@@ -4,11 +4,10 @@ use frame_support::{decl_module, decl_storage, traits::Get};
 
 use std::{result, cmp};
 use inherents::{ProvideInherent, InherentData, InherentIdentifier};
-#[cfg(feature = "std")]
-use frame_support::debug;
+
 use frame_support::{
 	Parameter,
-	traits::{Time, UnixTime},
+	traits::{Time, UnixTime, IsType},
 	weights::{DispatchClass, Weight},
 };
 use runtime::{

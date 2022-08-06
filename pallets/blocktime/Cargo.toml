@@ -37,5 +37,7 @@ std = [
     'serde',
     'frame-support/std',
     'frame-system/std',
+    'sp-core/std',
+    'sp-runtime/std',
     'pallet-timestamp/std',
 ]
