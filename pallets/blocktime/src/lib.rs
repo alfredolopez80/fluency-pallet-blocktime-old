@@ -1,34 +1,40 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use frame_support::{decl_module, decl_storage, traits::Get};
-
-use sp_std::{result, cmp};
-use sp_inherents::{ProvideInherent, InherentData, InherentIdentifier};
-
 use frame_support::{
+	decl_event, decl_error, decl_module, decl_storage, dispatch::DispatchResult,
+	ensure,
+	inherents::{
+		InherentData, InherentDataProviders,
+		ProvideInherentData,
+	},
+	traits::{Currency, Get, Time, UnixTime, IsType, OnUnbalanced, WithdrawReason, WithdrawReasons},
+	weights::{DispatchInfo, GetDispatchInfo, Pays, DispatchClass, Weight},
 	Parameter,
-	traits::{Time, UnixTime, IsType},
-	weights::{DispatchClass, Weight},
 };
+pub use pallet::*;
 use sp_runtime::{
 	RuntimeString,
 	traits::{
 		AtLeast32Bit, Zero, SaturatedConversion, Scale
 	}
 };
+use sp_std::prelude::*;
 use frame_system::ensure_none;
 use pallet_timestamp::{
 	InherentError, INHERENT_IDENTIFIER, InherentType,
 	OnTimestampSet,
 };
 
+use pallet_timestamp as timestamp;
 
 pub trait WeightInfo {
 	fn set() -> Weight;
 	fn on_finalize() -> Weight;
 }
 
-#[pallet_blocktime::config]
+
+
+#[pallet::config]
 pub trait Config: frame_system::Config {
     type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
     type TimeProvider: UnixTime;
