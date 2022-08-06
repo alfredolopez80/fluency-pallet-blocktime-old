@@ -16,7 +16,8 @@ use sp_runtime::{
 		AtLeast32Bit, Zero, SaturatedConversion, Scale
 	}
 };
-use frame_system::{ensure_none, RawEvent};
+use frame_system::ensure_none;
+use frame_system::Event;
 use sp_timestamp::{
 	InherentError, INHERENT_IDENTIFIER, InherentType,
 	OnTimestampSet,
@@ -35,7 +36,7 @@ pub trait Trait: frame_system::Trait {
 	/// Something which can be notified when the timestamp is set. Set this to `()` if not needed.
 	type OnTimestampSet: OnTimestampSet<Self::Moment>;
 
-	type Event: From<RawEvent<Self>> + Into<<Self as frame_system::Trait>::Event>;
+	type Event: From<Event<Self>> + Into<<Self as frame_system::Trait>::Event>;
 	type TimeProvider: UnixTime;
 
 	/// The minimum period between blocks. Beware that this is different to the *expected* period
