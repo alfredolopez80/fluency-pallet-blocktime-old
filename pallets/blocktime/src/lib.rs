@@ -1,7 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-mod benchmarking;
-mod default_weights;
+use frame_support::{decl_module, decl_storage, decl_event, decl_error, dispatch, traits::Get};
+use frame_system::ensure_signed;
 
 use sp_std::{result, cmp};
 use sp_inherents::{ProvideInherent, InherentData, InherentIdentifier};
@@ -23,7 +23,7 @@ use sp_timestamp::{
 	InherentError, INHERENT_IDENTIFIER, InherentType,
 	OnTimestampSet,
 };
-use frame_support::traits::UnixTime;
+
 
 pub trait WeightInfo {
 	fn set() -> Weight;
