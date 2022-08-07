@@ -42,7 +42,7 @@ pub trait Trait: frame_system::Trait {
   type MinimumPeriod: Get<Self::Moment>;
 
   /// Weight information for extrinsics in this pallet.
-  type WeightInfo: WeightInfo;
+  type WeightInfo: ();
 }
 
 decl_module! {
