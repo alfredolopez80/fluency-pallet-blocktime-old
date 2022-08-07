@@ -32,7 +32,6 @@ use pallet_grandpa::fg_primitives;
 use sp_version::RuntimeVersion;
 #[cfg(feature = "std")]
 use sp_version::NativeVersion;
-use crate::pallet_blocktime::WeightInfo;
 
 // A few exports that help ease life for downstream crates.
 #[cfg(any(feature = "std", test))]
@@ -47,6 +46,7 @@ pub use frame_support::{
   traits::{ KeyOwnerProofSystem, Randomness, UnixTime },
   weights::{
     Weight,
+	WeighInfo,
     IdentityFee,
     constants::{ BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight, WEIGHT_PER_SECOND },
   },
@@ -281,7 +281,7 @@ impl pallet_blocktime::Trait for Runtime {
   type Moment = u64;
   type OnTimestampSet = Aura;
   type MinimumPeriod = MinimumPeriod;
-  type WeightInfo = pallet_timestamp::WeightInfo;
+  type WeightInfo = WeightInfo;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
