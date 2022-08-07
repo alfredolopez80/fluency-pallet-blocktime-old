@@ -19,7 +19,6 @@ pub trait WeightInfo {
   fn set() -> Weight;
   fn on_finalize() -> Weight;
 }
-
 /// The module configuration trait
 pub trait Trait: frame_system::Trait {
   /// Type used for expressing timestamp.
