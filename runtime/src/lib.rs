@@ -46,7 +46,7 @@ pub use frame_support::{
   traits::{ KeyOwnerProofSystem, Randomness, UnixTime },
   weights::{
     Weight,
-	WeighInfo,
+	WeightInfo,
     IdentityFee,
     constants::{ BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight, WEIGHT_PER_SECOND },
   },
