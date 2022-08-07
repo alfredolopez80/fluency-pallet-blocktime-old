@@ -111,12 +111,6 @@ decl_storage! {
 	}
 }
 
-decl_event!(
-    pub enum Event {
-        EmitInput(u32),
-    }
-);
-
 impl<T: Trait> Module<T> {
   /// Get the current time for the current block.
   ///
