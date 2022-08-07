@@ -6,7 +6,6 @@ use frame_support::debug;
 use frame_support::{
   decl_module,
   decl_storage,
-  decl_event,
   traits::{ Get, Time, UnixTime },
   weights::{ DispatchClass, Weight },
   Parameter,
