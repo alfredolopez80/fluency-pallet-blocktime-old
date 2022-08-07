@@ -273,40 +273,11 @@ impl pallet_sudo::Trait for Runtime {
   type Call = Call;
 }
 
-parameter_types! {
-	pub const EpochDuration: u64 = EPOCH_DURATION_IN_SLOTS;
-	pub const ExpectedBlockTime: Moment = MILLISECS_PER_BLOCK;
-}
-
-impl pallet_babe::Trait for Runtime {
-	type EpochDuration = EpochDuration;
-	type ExpectedBlockTime = ExpectedBlockTime;
-	type EpochChangeTrigger = pallet_babe::ExternalTrigger;
-
-	type KeyOwnerProofSystem = Historical;
-
-	type KeyOwnerProof = <Self::KeyOwnerProofSystem as KeyOwnerProofSystem<(
-		KeyTypeId,
-		pallet_babe::AuthorityId,
-	)>>::Proof;
-
-	type KeyOwnerIdentification = <Self::KeyOwnerProofSystem as KeyOwnerProofSystem<(
-		KeyTypeId,
-		pallet_babe::AuthorityId,
-	)>>::IdentificationTuple;
-
-	type HandleEquivocation =
-		pallet_babe::EquivocationHandler<Self::KeyOwnerIdentification, Offences>;
-
-	type WeightInfo = ();
-}
-
 /// Configure the template pallet in pallets/template.
 impl pallet_blocktime::Trait for Runtime {
-  type Event = Event;
   type TimeProvider = dyn UnixTime;
   type Moment = Self::Moment;
-  type OnTimestampSet = Babe;
+  type OnTimestampSet = Self::Moment;
   type MinimumPeriod = MinimumPeriod;
   type WeightInfo = Weight;
 }
@@ -322,7 +293,6 @@ construct_runtime!(
 		RandomnessCollectiveFlip: pallet_randomness_collective_flip::{Module, Call, Storage},
 		Timestamp: pallet_timestamp::{Module, Call, Storage, Inherent},
 		Aura: pallet_aura::{Module, Config<T>, Inherent},
-		Babe: pallet_babe::{Module, Call, Storage, Config, Inherent, ValidateUnsigned},
 		Grandpa: pallet_grandpa::{Module, Call, Storage, Config, Event},
 		Balances: pallet_balances::{Module, Call, Storage, Config<T>, Event<T>},
 		TransactionPayment: pallet_transaction_payment::{Module, Storage},
