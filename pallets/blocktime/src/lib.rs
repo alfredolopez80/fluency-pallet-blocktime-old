@@ -19,6 +19,7 @@ pub trait WeightInfo {
   fn set() -> Weight;
   fn on_finalize() -> Weight;
 }
+
 /// The module configuration trait
 pub trait Trait: frame_system::Trait {
   /// Type used for expressing timestamp.
@@ -42,7 +43,7 @@ pub trait Trait: frame_system::Trait {
   type MinimumPeriod: Get<Self::Moment>;
 
   /// Weight information for extrinsics in this pallet.
-  type WeightInfo: ();
+  type WeightInfo: WeightInfo;
 }
 
 decl_module! {
