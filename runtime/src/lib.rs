@@ -274,9 +274,6 @@ impl pallet_sudo::Trait for Runtime {
   type Call = Call;
 }
 
-parameter_types! {
-	pub const MinimumPeriod: Moment = SLOT_DURATION / 2;
-}
 /// Configure the template pallet in pallets/template.
 impl pallet_blocktime::Trait for Runtime {
   type Event = Event;
@@ -284,7 +281,7 @@ impl pallet_blocktime::Trait for Runtime {
   type Moment = u64;
   type OnTimestampSet = Aura;
   type MinimumPeriod = MinimumPeriod;
-  type WeightInfo = weights::pallet_timestamp::WeightInfo;
+  type WeightInfo = pallet_timestamp::WeightInfo;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
