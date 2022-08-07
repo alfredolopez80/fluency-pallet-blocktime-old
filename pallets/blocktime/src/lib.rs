@@ -6,14 +6,15 @@ use frame_support::debug;
 use frame_support::{
   decl_module,
   decl_storage,
+  decl_event,
+  dispatch,
   traits::{ Get, Time, UnixTime },
   weights::{ DispatchClass, Weight },
   Parameter,
 };
-use sp_runtime::{ RuntimeString, traits::{ AtLeast32Bit, Zero, SaturatedConversion, Scale } };
 use frame_system::ensure_none;
+use sp_runtime::{ RuntimeString, traits::{ AtLeast32Bit, Zero, SaturatedConversion, Scale } };
 use sp_timestamp::{ InherentError, INHERENT_IDENTIFIER, InherentType, OnTimestampSet };
-
 
 pub trait WeightInfo {
   fn set() -> Weight;
@@ -28,6 +29,9 @@ pub trait Trait: frame_system::Trait {
     AtLeast32Bit +
     Scale<Self::BlockNumber, Output = Self::Moment> +
     Copy;
+
+  /// Because this pallet emits events, it depends on the runtime's definition of an event.
+  type Event: From<Event<Self>> + Into<<Self as frame_system::Trait>::Event>;
   /// Something which can be notified when the timestamp is set. Set this to `()` if not needed.
   type OnTimestampSet: OnTimestampSet<Self::Moment>;
 
@@ -101,7 +105,7 @@ decl_module! {
 }
 
 decl_storage! {
-	trait Store for Module<T: Trait> as Timestamp {
+	trait Store for Module<T: Trait> as BlocktimeModule {
 		/// Current time for the current block.
 		pub Now get(fn now) build(|_| 0u32.into()): T::Moment;
 
@@ -109,6 +113,16 @@ decl_storage! {
 		DidUpdate: bool;
 	}
 }
+
+// Pallets use events to inform users when important changes are made.
+// https://substrate.dev/docs/en/knowledgebase/runtime/events
+decl_event!(
+	pub enum Event<T> where AccountId = <T as frame_system::Trait>::AccountId {
+		/// Event documentation should end with an array that provides descriptive names for event
+		/// parameters. [something, who]
+		SomethingStored(u32, AccountId),
+	}
+);
 
 impl<T: Trait> Module<T> {
   /// Get the current time for the current block.
