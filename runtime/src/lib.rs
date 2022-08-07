@@ -275,7 +275,7 @@ impl pallet_sudo::Trait for Runtime {
 
 /// Configure the template pallet in pallets/template.
 impl pallet_blocktime::Trait for Runtime {
-  type TimeProvider = dyn UnixTime;
+  type TimeProvider = UnixTime;
   type Moment = Self::Moment;
   type OnTimestampSet = Self::Moment;
   type MinimumPeriod = MinimumPeriod;
