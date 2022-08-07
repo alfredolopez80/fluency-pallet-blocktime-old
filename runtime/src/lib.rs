@@ -280,7 +280,7 @@ impl pallet_blocktime::Trait for Runtime {
   type Moment = u64;
   type OnTimestampSet = Aura;
   type MinimumPeriod = MinimumPeriod;
-  type WeightInfo = WeightInfo;
+  type WeightInfo = Self::WeightInfo;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
