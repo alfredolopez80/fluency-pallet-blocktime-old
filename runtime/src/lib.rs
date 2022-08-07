@@ -276,11 +276,11 @@ impl pallet_sudo::Trait for Runtime {
 /// Configure the template pallet in pallets/template.
 impl pallet_blocktime::Trait for Runtime {
   type Event = Event;
-  type TimeProvider = u64;
+  type TimeProvider = Duration;
   type Moment = u64;
   type OnTimestampSet = Aura;
   type MinimumPeriod = MinimumPeriod;
-  type WeightInfo = Weight;
+  type WeightInfo = weights::Weight;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
