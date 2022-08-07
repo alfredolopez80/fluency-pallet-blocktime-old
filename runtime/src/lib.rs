@@ -8,6 +8,7 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use sp_std::prelude::*;
 use sp_core::{ crypto::KeyTypeId, OpaqueMetadata };
+use core::time::Duration;
 use sp_runtime::{
   ApplyExtrinsicResult,
   generic,
@@ -280,7 +281,7 @@ impl pallet_blocktime::Trait for Runtime {
   type Moment = u64;
   type OnTimestampSet = Aura;
   type MinimumPeriod = MinimumPeriod;
-  type WeightInfo = weights::Weight;
+  type WeightInfo = ();
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
